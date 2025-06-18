@@ -67,9 +67,7 @@ HEALTHCARE-DBMS/
 
 * **Backend**: Node.js, Express.js
 * **Frontend**: HTML5/CSS3 (Static Pages)
-* **Database**: MongoDB
-* **Authentication**: JWT, Role-based
-* **Deployment**: \[To be added]
+* **Database**: Postgres
 
 ---
 
