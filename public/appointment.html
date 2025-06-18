@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediCare - Appointment Management</title>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --accent: #ff6b6b;
+      --success: #4CAF50;
+      --warning: #FFC107;
+      --light: #f8fafc;
+      --dark: #334155;
+      --gray: #94a3b8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-icon {
+      font-size: 28px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .nav-link {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-link:hover {
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+    
+    .nav-link.active {
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+    
+    main {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    h1 {
+      color: var(--dark);
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      width: 100%;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card-icon {
+      color: var(--primary);
+      font-size: 24px;
+    }
+    
+    .search-box {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    input[type="number"],
+    input[type="datetime-local"],
+    select {
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      transition: border 0.3s ease;
+    }
+    
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    button {
+      padding: 12px 24px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    button.secondary {
+      background-color: #e2e8f0;
+      color: var(--dark);
+    }
+    
+    button.secondary:hover {
+      background-color: #cbd5e1;
+    }
+    
+    button.danger {
+      background-color: var(--accent);
+    }
+    
+    button.danger:hover {
+      background-color: #e74c3c;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .appointments-list {
+      margin-top: 20px;
+    }
+    
+    .appointment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .appointment-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .appointment-doctor {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .appointment-date {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .appointment-status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-scheduled {
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+    
+    .status-completed {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+    }
+    
+    .status-canceled {
+      background-color: rgba(255, 107, 107, 0.1);
+      color: var(--accent);
+    }
+    
+    .status-pending {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning);
+    }
+    
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray);
+      font-size: 18px;
+      transition: color 0.2s ease;
+      padding: 5px;
+    }
+    
+    .btn-icon:hover {
+      color: var(--primary);
+    }
+    
+    .btn-delete:hover {
+      color: var(--accent);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--gray);
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    .error {
+      color: var(--accent);
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
+    
+    footer {
+      background-color: white;
+      padding: 20px 40px;
+      text-align: center;
+      color: var(--gray);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      margin-top: auto;
+    }
+    
+    .footer-text {
+      font-size: 14px;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      background-color: #e2e8f0;
+      color: var(--dark);
+    }
+    
+    .tab.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .close {
+      color: var(--gray);
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: var(--dark);
+    }
+    
+    .modal-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="navbar">
+    <div class="logo">
+      <span class="logo-icon">⚕️</span>
+      <span>MediCare</span>
+    </div>
+    <div class="nav-links">
+      <a href="home.html" class="nav-link">Home</a>
+      <a href="patient.html" class="nav-link">Patients</a>
+      <a href="appointment.html" class="nav-link active">Appointment</a>
+      <a href="doctor.html" class="nav-link">Doctors</a>
+      <a href="pharmacy.html" class="nav-link">Pharmacy</a>
+      <a href="lab.html" class="nav-link">Labs</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Appointment Management</h1>
+    
+    <div class="container">
+      <!-- Search Patient Appointments -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">🔍</span>
+            Find Patient Appointments
+          </h2>
+        </div>
+        <div class="search-box">
+          <input type="number" id="patientIdInput" placeholder="Enter Patient ID">
+          <button onclick="getAppointments()">Search</button>
+          <button class="secondary" onclick="showNewAppointmentModal()">New Appointment</button>
+        </div>
+        <div id="errorMsg" class="error"></div>
+      </div>
+      
+      <!-- Appointments List -->
+      <div class="card" id="appointmentsCard" style="display:none;">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">📅</span>
+            Patient Appointments
+          </h2>
+          <div class="tabs">
+            <div class="tab active" onclick="filterAppointments('all', event)">All</div>
+            <div class="tab" onclick="filterAppointments('scheduled', event)">Scheduled</div>
+            <div class="tab" onclick="filterAppointments('completed', event)">Completed</div>
+          </div>
+        </div>
+        <div id="appointmentsList" class="appointments-list">
+          <!-- Appointments will be listed here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- New Appointment Modal -->
+    <div id="newAppointmentModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">×</span>
+        <h2>Schedule New Appointment</h2>
+        <form id="newAppointmentForm">
+          <label for="newAppointmentPatientId">Patient ID:</label>
+          <input type="number" id="newAppointmentPatientId" required>
+
+          <label for="newAppointmentDoctorId">Doctor ID:</label>
+          <input type="number" id="newAppointmentDoctorId" required>
+
+          <label for="newAppointmentDate">Date and Time:</label>
+          <input type="datetime-local" id="newAppointmentDate" required>
+
+          <label for="newAppointmentStatus">Status:</label>
+          <select id="newAppointmentStatus">
+            <option value="scheduled">Scheduled</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+
+          <button type="submit">Create Appointment</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Appointment Modal -->
+    <div id="editAppointmentModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">×</span>
+        <h2>Edit Appointment</h2>
+        <form id="editAppointmentForm">
+          <input type="hidden" id="editAppointmentId">
+
+          <label for="editAppointmentDate">Date and Time:</label>
+          <input type="datetime-local" id="editAppointmentDate" required>
+
+          <label for="editAppointmentStatus">Status:</label>
+          <select id="editAppointmentStatus">
+            <option value="scheduled">Scheduled</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+
+          <button type="submit">Update Appointment</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  
+  </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-text">© 2025 MediCare Health Services. All rights reserved.</p>
+  </footer>
+  <script>
+    // Global variables
+    let currentPatientId = null;
+    let allAppointments = [];
+
+    // Get appointments by patient ID
+    async function getAppointments() {
+      const patientId = document.getElementById('patientIdInput').value.trim();
+      const appointmentsCard = document.getElementById('appointmentsCard');
+      const appointmentsList = document.getElementById('appointmentsList');
+      const errorMsg = document.getElementById('errorMsg');
+
+      appointmentsCard.style.display = 'none';
+      errorMsg.textContent = '';
+
+      if (!patientId) {
+        errorMsg.textContent = 'Please enter a patient ID.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/appointments/patient/${patientId}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch appointments');
+        }
+
+        // Store the patient ID and appointments
+        currentPatientId = patientId;
+        allAppointments = data;
+
+        // Update the UI
+        renderAppointments(data);
+        appointmentsCard.style.display = 'block';
+
+      } catch (err) {
+        errorMsg.textContent = err.message;
+      }
+    }
+
+    // Render appointments list
+    function renderAppointments(appointments) {
+      const appointmentsList = document.getElementById('appointmentsList');
+
+      if (appointments.length === 0) {
+        appointmentsList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <p>No appointments found for this patient.</p>
+            <button class="secondary" onclick="showNewAppointmentModal()" style="margin-top: 10px;">Schedule New Appointment</button>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+
+      appointments.forEach(appointment => {
+        const date = new Date(appointment.date_of_appointment);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        html += `
+          <div class="appointment-item" data-status="${appointment.status.toLowerCase()}">
+            <div class="appointment-info">
+              <div class="appointment-doctor">Doctor ID: ${appointment.doctor_id}</div>
+              <div class="appointment-date">${formattedDate}</div>
+            </div>
+            <div class="appointment-status status-${appointment.status.toLowerCase()}">${appointment.status}</div>
+            <div class="actions">
+              <button class="btn-icon" onclick="showEditModal('${appointment.appointment_id}')">✏️</button>
+              <button class="btn-icon btn-delete" onclick="deleteAppointment('${appointment.appointment_id}')">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+
+      appointmentsList.innerHTML = html;
+    }
+
+    // Filter appointments by status
+    function filterAppointments(status, event) {
+      // Update active tab
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      // Filter the appointments
+      let filteredAppointments;
+      if (status === 'all') {
+        filteredAppointments = allAppointments;
+      } else {
+        filteredAppointments = allAppointments.filter(
+          appointment => appointment.status.toLowerCase() === status
+        );
+      }
+
+      renderAppointments(filteredAppointments);
+    }
+
+    // Delete appointment
+    async function deleteAppointment(appointmentId) {
+      if (!confirm('Are you sure you want to delete this appointment?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/appointments/${appointmentId}/patient/${currentPatientId}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to delete appointment');
+        }
+
+        // Refresh the appointments list
+        getAppointments();
+
+      } catch (err) {
+        document.getElementById('errorMsg').textContent = err.message;
+      }
+    }
+
+    // Show new appointment modal
+    function showNewAppointmentModal() {
+      const modal = document.getElementById('newAppointmentModal');
+      const patientIdInput = document.getElementById('patientIdInput');
+      const newAppointmentPatientId = document.getElementById('newAppointmentPatientId');
+
+      // Pre-fill patient ID if available
+      if (patientIdInput.value) {
+        newAppointmentPatientId.value = patientIdInput.value;
+      } else if (currentPatientId) {
+        newAppointmentPatientId.value = currentPatientId;
+      }
+
+      // Set min date to today
+      const today = new Date();
+      const formattedDate = today.toISOString().slice(0, 16);
+      document.getElementById('newAppointmentDate').min = formattedDate;
+
+      modal.style.display = 'flex';
+    }
+
+    // Close new appointment modal
+    function closeModal() {
+      document.getElementById('newAppointmentModal').style.display = 'none';
+      document.getElementById('newAppointmentForm').reset();
+    }
+
+    // Show edit appointment modal
+    function showEditModal(appointmentId) {
+      const appointment = allAppointments.find(a => a.appointment_id == appointmentId);
+      if (!appointment) return;
+
+      document.getElementById('editAppointmentId').value = appointmentId;
+      
+      // Format date for datetime-local input
+      const date = new Date(appointment.date_of_appointment);
+      const formattedDate = date.toISOString().slice(0, 16);
+      document.getElementById('editAppointmentDate').value = formattedDate;
+      document.getElementById('editAppointmentStatus').value = appointment.status.toLowerCase();
+
+      document.getElementById('editAppointmentModal').style.display = 'flex';
+    }
+
+    // Close edit appointment modal
+    function closeEditModal() {
+      document.getElementById('editAppointmentModal').style.display = 'none';
+      document.getElementById('editAppointmentForm').reset();
+    }
+
+    // Event listeners for form submissions
+    document.getElementById('newAppointmentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const appointmentData = {
+        patient_id: document.getElementById('newAppointmentPatientId').value,
+        doctor_id: document.getElementById('newAppointmentDoctorId').value,
+        date_of_appointment: document.getElementById('newAppointmentDate').value,
+        status: document.getElementById('newAppointmentStatus').value
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/appointments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(appointmentData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create appointment');
+        }
+
+        // Close modal and refresh appointments
+        closeModal();
+        currentPatientId = appointmentData.patient_id;
+        document.getElementById('patientIdInput').value = currentPatientId;
+        getAppointments();
+
+      } catch (err) {
+        document.getElementById('errorMsg').textContent = err.message;
+        closeModal();
+      }
+    });
+
+    document.getElementById('editAppointmentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const appointmentId = document.getElementById('editAppointmentId').value;
+      const updateData = {
+        date_of_appointment: document.getElementById('editAppointmentDate').value,
+        status: document.getElementById('editAppointmentStatus').value
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/appointments/${appointmentId}/patient/${currentPatientId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updateData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to update appointment');
+        }
+
+        // Close modal and refresh appointments
+        closeEditModal();
+        getAppointments();
+
+      } catch (err) {
+        document.getElementById('errorMsg').textContent = err.message;
+        closeEditModal();
+      }
+    });
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const newModal = document.getElementById('newAppointmentModal');
+      const editModal = document.getElementById('editAppointmentModal');
+      
+      if (event.target === newModal) {
+        closeModal();
+      }
+      
+      if (event.target === editModal) {
+        closeEditModal();
+      }
+    };
+  </script></body>
+</html>

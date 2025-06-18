@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediCare - Home Dashboard</title>
+  <!-- Link Bootstrap CSS (if you decide to add it later) -->
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --accent: #ff6b6b;
+      --success: #4CAF50;
+      --warning: #FFC107;
+      --info: #17a2b8;
+      --light: #f8fafc;
+      --dark: #334155;
+      --gray: #94a3b8;
+      --white: #ffffff;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar Styles (Keeping existing) */
+    .navbar {
+      background-color: var(--white);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      font-size: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      position: relative; /* For active indicator */
+    }
+
+    .nav-link:hover {
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+
+    .nav-link.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px; /* Adjust positioning */
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background-color: var(--primary);
+        border-radius: 3px;
+    }
+
+
+    /* Main Content Area */
+    main {
+      flex: 1;
+      padding: 40px;
+      max-width: 1400px; /* Wider max-width for dashboard */
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* --- Home Page Specific Styles --- */
+
+    .hero-section {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 12px;
+      color: var(--white);
+      box-shadow: 0 8px 25px rgba(58, 134, 255, 0.3);
+    }
+
+    .hero-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background-color: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-left: 5px solid transparent; /* For accent color on hover potentially */
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        /* Optional: add color border on hover */
+        /* border-left-color: var(--primary); */
+    }
+
+    .stat-icon {
+      font-size: 36px; /* Larger icons */
+      padding: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white); /* White icon color */
+    }
+    /* Icon specific colors */
+    .icon-appointments { background-color: var(--primary); }
+    .icon-patients { background-color: var(--success); }
+    .icon-labs { background-color: var(--warning); }
+    .icon-prescriptions { background-color: var(--accent); }
+
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 16px;
+      color: var(--gray);
+      margin-top: 5px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .action-card {
+      background-color: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Align content to the start */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      color: inherit; /* Inherit text color */
+    }
+
+    .action-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      cursor: pointer; /* Indicate interactivity */
+    }
+
+    .action-icon {
+      font-size: 30px;
+      margin-bottom: 15px;
+      color: var(--primary); /* Use primary color for action icons */
+      /* You could use different colors per action */
+       background-color: rgba(58, 134, 255, 0.1); /* Light bg */
+       padding: 12px;
+       border-radius: 8px;
+    }
+
+
+    .action-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .action-description {
+      font-size: 15px;
+      color: var(--gray);
+      flex-grow: 1; /* Allow description to take space */
+      margin-bottom: 20px;
+    }
+
+    .action-button {
+        align-self: flex-end; /* Position button at the bottom right */
+        margin-top: auto; /* Pushes button to bottom if content varies */
+        padding: 10px 20px;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+        text-decoration: none; /* Remove underline from link-styled button */
+        display: inline-block; /* Proper button display */
+    }
+    .search-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-box input[type="number"],
+    .search-box input[type="text"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-box button {
+      padding: 10px 15px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .search-box button:hover {
+      background-color: #2980b9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      border-radius: 4px;
+    }
+
+    thead th {
+      background-color: #f7f7f7;
+    }
+    .action-button:hover {
+      background-color: var(--primary-dark);
+    }
+
+
+    /* --- Styles from Template (Integrated or Modified) --- */
+
+    /* Keep existing .card, .button, etc. styles as fallbacks or for other pages */
+    /* Add styles from template below if they don't conflict, */
+    /* otherwise ensure the home page styles above take precedence */
+
+    .card {
+      background-color: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      width: 100%;
+      margin-bottom: 30px; /* Added margin between generic cards */
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icon {
+      color: var(--primary);
+      font-size: 24px;
+    }
+
+    button, .button { /* Apply to .button class too */
+      padding: 12px 24px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button:hover, .button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    button.secondary, .button.secondary {
+      background-color: #e2e8f0;
+      color: var(--dark);
+    }
+
+    button.secondary:hover, .button.secondary:hover {
+      background-color: #cbd5e1;
+    }
+
+    /* Footer Styles (Keeping existing) */
+    footer {
+      background-color: white;
+      padding: 20px 40px;
+      text-align: center;
+      color: var(--gray);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      margin-top: auto; /* Pushes footer to bottom */
+    }
+
+    .footer-text {
+      font-size: 14px;
+    }
+
+    /* Basic Responsive adjustments */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 15px 20px;
+      }
+      .nav-links {
+          /* You might want a hamburger menu here for real apps */
+          gap: 10px;
+      }
+      .nav-link {
+        padding: 8px 10px;
+        font-size: 14px;
+      }
+      main {
+        padding: 20px;
+      }
+      .hero-title {
+          font-size: 28px;
+      }
+      .hero-subtitle {
+          font-size: 16px;
+      }
+      .dashboard-grid {
+          grid-template-columns: 1fr; /* Stack stats cards on smaller screens */
+          gap: 20px;
+      }
+      .stat-card {
+          padding: 20px;
+          gap: 15px;
+      }
+      .stat-icon {
+          font-size: 30px;
+          padding: 12px;
+      }
+      .stat-value {
+          font-size: 28px;
+      }
+      .stat-label {
+          font-size: 15px;
+      }
+       .quick-actions-grid {
+          grid-template-columns: 1fr; /* Stack action cards */
+          gap: 20px;
+       }
+      .action-card {
+        padding: 25px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="navbar">
+    <a href="#" class="logo"> <!-- Make logo a link to home -->
+      <span class="logo-icon">⚕️</span>
+      <span>MediCare</span>
+    </a>
+    <div class="nav-links">
+      <a href="#" class="nav-link active">Home</a> <!-- Active link -->
+      <a href="patient.html" class="nav-link">Patients</a>
+      <a href="appointment.html" class="nav-link">Appointment</a>
+      <a href="doctor.html" class="nav-link">Doctors</a> <!-- Assuming doctors page is doctor.html -->
+      <a href="pharmacy.html" class="nav-link">Pharmacy</a>
+      <a href="lab.html" class="nav-link">Labs</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">Welcome Back to MediCare!</h1>
+      <p class="hero-subtitle">Your central hub for efficient patient management.</p>
+    </section>
+
+    <!-- Dashboard Stats -->
+    <section>
+       <h2 class="section-title"><span class="card-icon">📊</span> Overview</h2>
+        <div class="dashboard-grid">
+            <!-- Stat Card 1: Appointments -->
+            <div class="stat-card">
+                <div class="stat-icon icon-appointments">📅</div>
+                <div class="stat-content">
+                    <div class="stat-value">12</div> <!-- Placeholder Data -->
+                    <div class="stat-label">Upcoming Appointments Today</div>
+                </div>
+            </div>
+
+            <!-- Stat Card 2: Active Patients -->
+            <div class="stat-card">
+                <div class="stat-icon icon-patients">🧑‍🤝‍🧑</div>
+                <div class="stat-content">
+                    <div class="stat-value">50</div> <!-- Placeholder Data -->
+                    <div class="stat-label">Active Patients</div>
+                </div>
+            </div>
+
+            <!-- Stat Card 3: Pending Lab Results -->
+            <div class="stat-card">
+                <div class="stat-icon icon-labs">🔬</div>
+                <div class="stat-content">
+                    <div class="stat-value">34</div> <!-- Placeholder Data -->
+                    <div class="stat-label">Lab Results</div>
+                </div>
+            </div>
+
+             <!-- Stat Card 4: Prescriptions Filled -->
+            <div class="stat-card">
+                <div class="stat-icon icon-prescriptions">💊</div>
+                <div class="stat-content">
+                    <div class="stat-value">156</div> <!-- Placeholder Data -->
+                    <div class="stat-label">Prescriptions Processed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section>
+      <h2 class="section-title"><span class="card-icon">⚡</span> Quick Actions</h2>
+        <div class="quick-actions-grid">
+            <!-- Action Card 1: Schedule Appointment -->
+            <a href="appointment.html" class="action-card">
+                <div class="action-icon">➕</div>
+                <h3 class="action-title">Schedule Appointment</h3>
+                <p class="action-description">Quickly book a new appointment slot for a patient.</p>
+                <span class="action-button">Schedule Now</span> <!-- Looks like a button -->
+            </a>
+
+            <!-- Action Card 2: Register Patient -->
+            <a href="patient.html" class="action-card"> <!-- Link might go to a specific registration section -->
+                <div class="action-icon">👤</div>
+                <h3 class="action-title">Register New Patient</h3>
+                <p class="action-description">Add a new patient profile to the MediCare system.</p>
+                <span class="action-button">Register Patient</span>
+            </a>
+
+            <!-- Action Card 3: View Patients -->
+             <a href="patient.html" class="action-card">
+                <div class="action-icon">🔍</div>
+                <h3 class="action-title">Find a Patient</h3>
+                <p class="action-description">Search and view detailed patient records and history.</p>
+                 <span class="action-button">Search Patients</span>
+            </a>
+
+            <!-- Action Card 4: Manage Lab Requests -->
+            <a href="lab.html" class="action-card">
+                <div class="action-icon">🧪</div>
+                <h3 class="action-title">Manage Lab Tests</h3>
+                <p class="action-description">View pending tests, request new ones, and see results.</p>
+                 <span class="action-button">Go to Labs</span>
+            </a>
+        </div>
+    </section>
+
+     <!-- You could add more sections here like 'Recent Activity', 'Notifications', etc. -->
+     <!-- Example of using the standard card style for another section -->
+     <!-- <section>
+        <div class="card">
+            <div class="card-header">
+                 <h2 class="card-title">
+                    <span class="card-icon">🔔</span>Notifications
+                 </h2>
+            </div>
+            <div style="text-align: center; color: var(--gray); padding: 20px 0;">
+                No new notifications.
+            </div>
+        </div>
+     </section> -->
+     <section>
+        <h2 class="section-title"><span class="card-icon">⚡</span> Admin Panel</h2>
+
+        <div class="page-view" id="list-doctors">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">🏥 List All Doctors</h2>
+              </div>
+              <div class="search-box">
+                <input type="number" id="hospitalIdInput" placeholder="Enter hospital ID">
+                <button onclick="listAllDoctors()">Get Doctors</button>
+              </div>
+              <div id="doctorListContent" class="doctor-list">
+                <table>
+                  <thead>
+                    <tr><th>Doctor ID</th><th>Name</th><th>Specialization</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>101</td><td>Dr. Jane Smith</td><td>Cardiology</td></tr>
+                    <tr><td>102</td><td>Dr. John Doe</td><td>Neurology</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <div class="page-view" id="generate-report">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">📊 Generate Report</h2>
+              </div>
+              <div class="search-box">
+                <button onclick="generateReport()">Generate</button>
+              </div>
+              <table class="report-table">
+                <thead>
+                  <tr><th>Category</th><th>Total</th></tr>
+                </thead>
+                <tbody id="reportTableBody">
+                  <tr><td>Appointments</td><td>150</td></tr>
+                  <tr><td>Prescriptions</td><td>120</td></tr>
+                  <tr><td>Lab Tests</td><td>75</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="page-view" id="doctor-appointments">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">👨‍⚕️ Doctors by Appointments (Descending)</h2>
+              </div>
+              <div class="search-box">
+                <button onclick="listDoctorsByAppointments()">Load Data</button>
+              </div>
+              <table class="doctor-appointment-table">
+                <thead>
+                  <tr><th>Doctor Name</th><th>Appointment Count</th></tr>
+                </thead>
+                <tbody id="doctorAppointmentsBody">
+                  <tr><td>Dr. Jane Smith</td><td>85</td></tr>
+                  <tr><td>Dr. John Doe</td><td>65</td></tr>
+                  <tr><td>Dr. Emily Clark</td><td>45</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="page-view" id="view-info">
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">📄 View Info</h2>
+              </div>
+              <table class="info-table">
+                <thead>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Doctor ID</th>
+                    <th>Date of Appointment</th>
+                    <th>Status</th>
+                    <th>Prescribed Medicines</th>
+                    <th>Dosage</th>
+                    <th>Duration</th>
+                    <th>Test Results</th>
+                  </tr>
+                </thead>
+                <tbody id="viewInfoTableBody">
+                  <tr>
+                    <td>201</td>
+                    <td>101</td>
+                    <td>2025-04-10</td>
+                    <td>Completed</td>
+                    <td>Atorvastatin</td>
+                    <td>10mg</td>
+                    <td>30 days</td>
+                    <td>Normal</td>
+                  </tr>
+                  <tr>
+                    <td>202</td>
+                    <td>102</td>
+                    <td>2025-04-11</td>
+                    <td>Ongoing</td>
+                    <td>Metformin</td>
+                    <td>500mg</td>
+                    <td>60 days</td>
+                    <td>Pending</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div> 
+     </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-text">© 2025 MediCare Health Services. All rights reserved.</p>
+  </footer>
+
+  <!-- No JavaScript needed for this static layout -->
+  <!-- <script>
+    // If this were a React/dynamic app, you would fetch data here
+    // For example:
+    // async function loadDashboardStats() {
+    //    const response = await fetch('/api/dashboard-stats');
+    //    const data = await response.json();
+    //    document.querySelector('.icon-appointments + .stat-content .stat-value').textContent = data.appointmentsToday;
+    //    // ... update other stats
+    // }
+    // document.addEventListener('DOMContentLoaded', loadDashboardStats);
+  </script> -->
+
+   <!-- Link Bootstrap JS Bundle (Optional, if you add Bootstrap components requiring JS) -->
+   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+</body>
+</html>

@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediCare - Patient Management</title>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --accent: #ff6b6b;
+      --success: #4CAF50;
+      --warning: #FFC107;
+      --light: #f8fafc;
+      --dark: #334155;
+      --gray: #94a3b8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-icon {
+      font-size: 28px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .nav-link {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-link:hover {
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+    
+    .nav-link.active {
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+    
+    main {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    h1 {
+      color: var(--dark);
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      width: 100%;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card-icon {
+      color: var(--primary);
+      font-size: 24px;
+    }
+    
+    .search-box {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="datetime-local"],
+    select {
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      transition: border 0.3s ease;
+    }
+    
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    button {
+      padding: 12px 24px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    button.secondary {
+      background-color: #e2e8f0;
+      color: var(--dark);
+    }
+    
+    button.secondary:hover {
+      background-color: #cbd5e1;
+    }
+    
+    button.danger {
+      background-color: var(--accent);
+    }
+    
+    button.danger:hover {
+      background-color: #e74c3c;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .patients-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .patient-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      border-left: 4px solid var(--primary);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .patient-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .patient-name {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    
+    .patient-id {
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .patient-info {
+      font-size: 14px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .patient-info-icon {
+      color: var(--primary);
+    }
+    
+    .medical-history {
+      margin-top: 20px;
+    }
+    
+    .medical-record {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .record-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .record-date {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .record-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .record-item {
+      margin-bottom: 5px;
+    }
+    
+    .record-label {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .record-value {
+      font-weight: 500;
+    }
+    
+    .interaction-item {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .test-result {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .prescription-item {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      background-color: #e2e8f0;
+      color: var(--dark);
+      white-space: nowrap;
+    }
+    
+    .tab.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .tab-content {
+      display: none;
+      
+    }
+    
+    .tab-content.active {
+      display: block;
+      /* display: flex;
+      justify-content: center; /* Center horizontally */
+      /* align-items: center;  */ 
+    }
+
+    
+    
+    .error {
+      color: var(--accent);
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--gray);
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: rgba(58, 134, 255, 0.1);
+      color: var(--primary);
+    }
+    
+    footer {
+      background-color: white;
+      padding: 20px 40px;
+      text-align: center;
+      color: var(--gray);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      margin-top: auto;
+    }
+    
+    .footer-text {
+      font-size: 14px;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .close {
+      color: var(--gray);
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: var(--dark);
+    }
+    
+    .modal-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .page-tabs {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    .page-tab {
+      text-decoration: none;
+      color: var(--gray);
+      font-weight: 600;
+      padding-bottom: 10px;
+      position: relative;
+      white-space: nowrap;
+    }
+    
+    .page-tab.active {
+      color: var(--primary);
+    }
+    
+    .page-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--primary);
+      border-radius: 3px;
+    }
+    
+    .page-view {
+      display: none;
+    }
+    
+    .page-view.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="navbar">
+    <div class="logo">
+      <span class="logo-icon">⚕️</span>
+      <span>MediCare</span>
+    </div>
+    <div class="nav-links">
+      <a href="home.html" class="nav-link">Home</a>
+      <a href="patient.html" class="nav-link">Patients</a>
+      <a href="appointment.html" class="nav-link">Appointment</a>
+      <a href="doctor.html" class="nav-link">Doctors</a>
+      <a href="pharmacy.html" class="nav-link">Pharmacy</a>
+      <a href="#" class="nav-link active">Labs</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Lab Management</h1>
+    
+    <div class="page-tabs">
+      <a href="#" class="page-tab active" data-page="all-test">Test conducted</a>
+      <a href="#" class="page-tab" data-page="test-report">Test report</a>
+      <a href="#" class="page-tab" data-page="patient-history">Patient History</a>
+      <a href="#" class="page-tab" data-page="interactions">Add Test</a>
+      <a href="#" class="page-tab" data-page="mri-patients">MRI with Prescription</a>
+      <a href="#" class="page-tab" data-page="patient-lab">Patient-Lab</a>
+      <a href="#" class="page-tab" data-page="doctor-labs">Doctor-Lab</a>
+
+    </div>
+    
+    <div class="container">
+      <!-- All Patients View -->
+      <div class="page-view active" id="all-test">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <span class="card-icon">👥</span>
+              Tests Conducted
+            </h2>
+            <div class="search-box">
+              <input type="text" id="patientSearchInput" placeholder="Search test..." onkeyup="searchTests()">
+            </div>
+          </div>
+      
+          <div id="patientsList" class="patients-list">
+            <!-- Tests will be listed here -->
+            <div class="empty-state" id="loadingState">
+              <div class="empty-icon">🔄</div>
+              <p>Loading tests...</p>
+            </div>
+            <div id="testList" class="test-grid"></div>
+          </div>
+        </div>
+      </div>
+      
+      <style>
+        /* Styles for test list */
+        .patients-list {
+          padding: 10px;
+        }
+      
+        /* Style the test items as stacked boxes */
+        .test-grid {
+          display: grid; /* Use CSS Grid */
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive columns */
+          gap: 10px; /* Space between items */
+        }
+      
+        .test-item {
+          border: 1px solid #ddd;
+          padding: 10px;
+          margin-bottom: 5px;
+          background-color: #f9f9f9;
+          border-radius: 5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+        }
+      
+        .test-item strong {
+          font-weight: bold;
+        }
+      </style>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const patientsList = document.getElementById('patientsList');
+          const patientSearchInput = document.getElementById('patientSearchInput');
+          const loadingState = document.getElementById('loadingState');
+          const testList = document.getElementById('testList'); // Get the div element
+      
+          let allTests = []; // Store all fetched tests
+          let filteredTests = []; // Store tests after search
+      
+          async function fetchTests() {
+            try {
+              const response = await fetch('http://localhost:3000/api/labtests/all');
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+      
+              allTests = await response.json();
+              filteredTests = [...allTests]; // Initially show all tests
+      
+              loadingState.style.display = 'none'; // Hide loading message
+              displayTests(filteredTests);
+      
+            } catch (error) {
+              console.error('Error fetching tests:', error);
+              patientsList.innerHTML = `<p style="color: red;">Error fetching data: ${error.message}</p>`;
+            }
+          }
+      
+          function displayTests(tests) {
+            testList.innerHTML = ""; // Clear existing list
+      
+            if (tests.length > 0) {
+              tests.forEach(test => {
+                const testItem = document.createElement('div'); //Create a div
+                testItem.classList.add('test-item');
+                testItem.innerHTML = `
+                  <strong>Test ID:</strong> ${test.test_id}<br>
+                  <strong>Test Type:</strong> ${test.test_type}<br>
+                  <strong>Result:</strong> ${test.result}<br>
+                  <strong>Patient Name:</strong> ${test.name}
+                `; // Display test details
+                testList.appendChild(testItem); //Append the div in patientsList
+              });
+            } else {
+              testList.innerHTML = "<p>No tests found matching your search.</p>";
+            }
+          }
+      
+      
+          window.searchTests = function() {
+            const searchTerm = patientSearchInput.value.toLowerCase();
+            filteredTests = allTests.filter(test =>
+              test.name.toLowerCase().includes(searchTerm) ||
+              test.test_type.toLowerCase().includes(searchTerm) ||
+              test.result.toLowerCase().includes(searchTerm) // Enable search in name or test_type and result
+            );
+      
+            displayTests(filteredTests);
+          }
+      
+          // Initial fetch
+          fetchTests();
+        });
+      </script>      
+      <div class="page-view" id="test-report">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span class="card-icon">👤</span>
+                    Test report
+                </h2>
+            </div>
+            <div class="search-box">
+                <div>
+                    <label for="patientIdForDetails">Patient ID:</label>
+                    <input type="number" id="patientIdForDetails" placeholder="Enter Patient ID">
+                </div>
+                <div>
+                    <label for="doctorIdForDetails">Doctor ID:</label>
+                    <input type="number" id="doctorIdForDetails" placeholder="Enter Doctor ID">
+                </div>
+                <button onclick="testReport()">Get Details</button>
+            </div>
+    
+            <div id="patientDetails">
+                <!--  Patient details will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* Basic table styling */
+        #patientDetails table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+    
+        #patientDetails th,
+        #patientDetails td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    
+        #patientDetails th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    
+        /* Optional: Add hover effect for rows */
+        #patientDetails tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+    
+    <script>
+        async function testReport() {
+            const patientId = document.getElementById('patientIdForDetails').value;
+            const doctorId = document.getElementById('doctorIdForDetails').value;
+            const detailsDiv = document.getElementById('patientDetails');
+    
+            if (!patientId || !doctorId) {
+                detailsDiv.innerHTML = '<p style="color: red;">Please enter both Patient ID and Doctor ID.</p>';
+                return;
+            }
+    
+            try {
+                const apiUrl = `http://localhost:3000/api/labtests/patient/${patientId}/doctor/${doctorId}`; // Construct the API URL
+                const response = await fetch(apiUrl);
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                console.log("API Response:", data); // Log the response for debugging
+    
+                // Display the data in a table
+                if (data && data.length > 0) {
+                    let tableHTML = '<h3>Lab Test Results:</h3>';
+                    tableHTML += '<table>';
+                    tableHTML += '<thead><tr><th>Test ID</th><th>Test Type</th><th>Result</th></tr></thead>';
+                    tableHTML += '<tbody>';
+    
+                    data.forEach(test => {  //Itterating on array of object, which is wrong
+    
+                      tableHTML += `<tr><td>${test.test_id || 'N/A'}</td><td>${test.test_type || 'N/A'}</td><td>${test.result || 'N/A'}</td></tr>`; 
+    
+                    });
+    
+                    tableHTML += '</tbody></table>';
+                    detailsDiv.innerHTML = tableHTML;
+    
+                } else {
+                    detailsDiv.innerHTML = '<p>No lab test results found for this patient and doctor combination.</p>';
+                }
+    
+    
+            } catch (error) {
+                console.error('Error fetching patient details:', error);
+                detailsDiv.innerHTML = `<p style="color: red;">Error fetching data: ${error.message}</p>`;
+            }
+        }
+    </script>      
+
+
+
+
+<div class="page-view" id="patient-history">
+  <div class="card">
+      <div class="card-header">
+          <h2 class="card-title">
+              <span class="card-icon">📋</span>
+              Patient test conducted
+          </h2>
+      </div>
+      <div class="search-box">
+          <input type="number" id="patientIdForHistory" placeholder="Enter Patient ID">
+          <button onclick="getPatientDetails()">Get Details</button>
+      </div>
+
+      <div id="medicalHistoryContent" class="medical-history" style="display:none;">
+          <!-- Medical history content will be loaded here -->
+      </div>
+
+      <div id="medicalHistoryError" class="error" style="display:none;"></div>
+  </div>
+</div>
+
+<style>
+  /* Table Styles */
+  #medicalHistoryContent table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+  }
+
+  #medicalHistoryContent th,
+  #medicalHistoryContent td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+  }
+
+  #medicalHistoryContent th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+  }
+
+  /* Error Message Styles */
+  #medicalHistoryError {
+      color: red;
+      margin-top: 10px;
+  }
+</style>
+
+<script>
+  async function getPatientDetails() {
+      const patientId = document.getElementById('patientIdForHistory').value;
+      const historyContentDiv = document.getElementById('medicalHistoryContent');
+      const historyErrorDiv = document.getElementById('medicalHistoryError');
+
+      // Reset and show loading state
+      historyContentDiv.style.display = 'none';
+      historyErrorDiv.style.display = 'none';
+      historyContentDiv.innerHTML = '<p>Loading...</p>';
+      historyContentDiv.style.display = 'block';
+
+      if (!patientId) {
+          historyContentDiv.style.display = 'none';
+          historyErrorDiv.textContent = 'Please enter a Patient ID.';
+          historyErrorDiv.style.display = 'block';
+          return;
+      }
+
+      try {
+          const apiUrl = `http://localhost:3000/api/labtests/average-results/patient/${patientId}`;
+          const response = await fetch(apiUrl);
+
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("API Response:", data);
+
+          if (data && data.length > 0) {
+
+              let tableHTML = '<table>';
+              tableHTML += '<thead><tr><th>Test Type</th><th>Result Interpretation</th></tr></thead>';
+              tableHTML += '<tbody>';
+
+              // Iterate through each test result in the data array
+              data.forEach(testResult => {
+                const testType = testResult.test_type || 'N/A';
+                const averageResult = testResult.averageresult;
+
+                let interpretation = '';
+
+                if (averageResult <= 0.4) {
+                    interpretation = 'Negative'; // Or "Normal", depending on context
+                } else if (averageResult >= 0.6) {
+                    interpretation = 'Positive'; // Or "Abnormal"
+                }else {
+                    interpretation = 'Uncertain';
+                }
+
+                tableHTML += `<tr><td>${testType}</td><td>${interpretation}</td></tr>`;
+              });
+
+              tableHTML += '</tbody></table>';
+              historyContentDiv.innerHTML = tableHTML;
+              historyContentDiv.style.display = 'block';
+              historyErrorDiv.style.display = 'none';
+
+          } else {
+              historyContentDiv.textContent = 'No medical history found for this patient.';
+              historyContentDiv.style.display = 'block';
+              historyErrorDiv.style.display = 'none';
+          }
+
+      } catch (error) {
+          console.error('Error fetching medical history:', error);
+          historyContentDiv.style.display = 'none';
+          historyErrorDiv.textContent = `Error fetching data: ${error.message}`;
+          historyErrorDiv.style.display = 'block';
+      }
+  }
+</script>      
+      <!-- Patient-Doctor Interactions View -->
+      <div class="page-view" id="interactions">
+        <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="card-icon">🔍</span>
+                Add Test
+              </h2>
+            </div>
+            <div class="search-box">
+              <input type="number" id="patientIdInput" placeholder="Enter test ID">
+              <button onclick="getAppointments()">Add</button>
+              <button class="secondary" onclick="showNewAppointmentModal()">New Test</button>
+            </div>
+            <div id="errorMsg" class="error"></div>
+          </div>
+          
+          <!-- Appointments List -->
+          <div class="card" id="appointmentsCard" style="display:none;">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="card-icon">📅</span>
+                Patient Appointments
+              </h2>
+              <div class="tabs">
+                <div class="tab active" onclick="filterAppointments('all')">All</div>
+                <div class="tab" onclick="filterAppointments('scheduled')">Scheduled</div>
+                <div class="tab" onclick="filterAppointments('completed')">Completed</div>
+              </div>
+            </div>
+            <div id="appointmentsList" class="appointments-list">
+              <!-- Appointments will be listed here -->
+            </div>
+          </div>
+      </div>
+      <div id="newAppointmentModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Schedule New test</h2>
+            <span class="close" onclick="closeModal()">&times;</span>
+          </div>
+          <form id="newAppointmentForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Doctor ID</label>
+                <input type="number" id="newAppointmentPatientId" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Patient ID</label>
+                <input type="number" id="newAppointmentDoctorId" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Appointment Date & Time</label>
+                <input type="datetime-local" id="newAppointmentDate" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Status</label>
+                <select id="newAppointmentStatus" required>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="secondary" onclick="closeModal()">Cancel</button>
+              <button type="submit">Schedule Appointment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    
+      <div class="page-view" id="mri-patients">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span class="card-icon">🔬</span>
+                    Patients with MRI & Prescription
+                </h2>
+            </div>
+    
+            <table>
+                <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Prescription ID</th>
+                </tr>
+                </thead>
+                <tbody id="mriPatientsTable">
+                <tr>
+                    <td colspan="4" class="empty-state">
+                        <div class="empty-icon">🔄</div>
+                        <p>Loading data...</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+    
+            <div id="mriPatientsError" class="error" style="display:none;"></div>
+        </div>
+    </div>
+    
+    <style>
+        /* Basic table styles */
+        #mriPatientsTable tr.empty-state {
+            text-align: center;
+        }
+    
+        #mriPatientsTable td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    
+        #mriPatientsTable th {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    
+        #mriPatientsError {
+            color: red;
+            margin-top: 10px;
+        }
+    
+        /* Add this if you want specific style for "loading" or "empty" state icon */
+        .empty-icon {
+            font-size: 2em; /* Adjust size as needed */
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { //Run the api
+            const mriPatientsTable = document.getElementById('mriPatientsTable');
+            const mriPatientsError = document.getElementById('mriPatientsError');
+    
+            // Function to fetch and display data
+            async function fetchMriPatients() {
+                mriPatientsTable.innerHTML = `<tr>
+                    <td colspan="3" class="empty-state">
+                        <div class="empty-icon">🔄</div>
+                        <p>Loading data...</p>
+                    </td>
+                </tr>`;
+                mriPatientsError.style.display = 'none';
+    
+                try {
+                    const response = await fetch('http://localhost:3000/api/patients/mri-with-prescription');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+    
+                    const data = await response.json();
+                    console.log("API Response:", data); // Inspect the API response
+    
+                    // Clear "Loading" row
+                    mriPatientsTable.innerHTML = '';
+    
+                    if (data && data.length > 0) {
+                        data.forEach(patient => {
+                            const row = mriPatientsTable.insertRow();
+                            const patientIdCell = row.insertCell();
+                            const patientNameCell = row.insertCell();
+                            const prescriptionIdCell = row.insertCell();
+    
+                            patientIdCell.textContent = patient.patient_id || 'N/A';
+                            patientNameCell.textContent = patient.patient_name || 'N/A';
+                            prescriptionIdCell.textContent = patient.prescription_id || 'N/A';
+                        });
+                    } else {
+                        mriPatientsTable.innerHTML = `<tr>
+                            <td colspan="3" class="empty-state">
+                                <p>No MRI patients found.</p>
+                            </td>
+                        </tr>`;
+                    }
+                } catch (error) {
+                    console.error('Error fetching MRI patients:', error);
+                    mriPatientsTable.innerHTML = ''; // Clear any existing data
+                    mriPatientsError.textContent = `Error fetching data: ${error.message}`;
+                    mriPatientsError.style.display = 'block';
+                }
+            }
+    
+            // Call the function to fetch data when the page loads
+            fetchMriPatients();
+        });
+    </script>
+
+<div class="page-view" id="patient-lab">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span class="card-icon">📋</span>
+        Patient Lab Tests
+      </h2>
+    </div>
+
+    <div class="search-box">
+      <input type="number" id="labIdInput" placeholder="Enter Lab ID" />
+      <button onclick="getLabTestPatients()">Get Patients</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Test ID</th>
+          <th>Test Type</th>
+          <th>Patient Name</th>
+        </tr>
+      </thead>
+      <tbody id="labTestTableBody">
+        <tr>
+          <td colspan="3" class="empty-state">
+            <div class="empty-icon">🧪</div>
+            <p>Click "Get Patients" to load data.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div id="labTestError" class="error" style="display: none;"></div>
+  </div>
+</div>
+
+<script>
+  async function getLabTestPatients() {
+    const labId = document.getElementById('labIdInput').value.trim();
+    const tableBody = document.getElementById('labTestTableBody');
+    const errorDiv = document.getElementById('labTestError');
+
+    if (!labId) {
+      alert("Please enter a valid Lab ID.");
+      return;
+    }
+
+    // Show loading state
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="3" class="empty-state">
+          <div class="empty-icon">⏳</div>
+          <p>Loading data...</p>
+        </td>
+      </tr>`;
+    errorDiv.style.display = 'none';
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/labtests/lab/${labId}`);
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+      const data = await response.json();
+
+      if (data.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="3" class="empty-state">
+              <div class="empty-icon">📭</div>
+              <p>No test records found for Lab ID ${labId}.</p>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = '';
+      data.forEach(item => {
+        const row = tableBody.insertRow();
+        row.insertCell().textContent = item.test_id;
+        row.insertCell().textContent = item.test_type;
+        row.insertCell().textContent = item.patient_name;
+      });
+
+    } catch (error) {
+      console.error('Error fetching lab test data:', error);
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = `Error fetching data: ${error.message}`;
+      tableBody.innerHTML = '';
+    }
+  }
+</script>
+      <div class="page-view" id="doctor-labs">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span class="card-icon">🔬</span>
+                    Labs Associated with Doctor
+                </h2>
+            </div>
+            <div class="search-box">
+                <label for="doctorIdForLabs">Doctor ID:</label>
+                <input type="number" id="doctorIdForLabs" placeholder="Enter Doctor ID">
+                <button onclick="getLabsByDoctor()">Get Labs</button>
+            </div>
+    
+            <div id="labsContent">
+                <!-- Labs will be displayed here -->
+            </div>
+    
+            <div id="labsError" style="color: red; display: none;"></div>
+        </div>
+    </div>
+    
+    <style>
+        /* Table Styles */
+        #labsContent table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+    
+        #labsContent th,
+        #labsContent td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    
+        #labsContent th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+    
+    <script>
+        async function getLabsByDoctor() {
+            const doctorId = document.getElementById('doctorIdForLabs').value;
+            const labsContentDiv = document.getElementById('labsContent');
+            const labsErrorDiv = document.getElementById('labsError');
+    
+            // Clear previous content and show loading
+            labsContentDiv.innerHTML = '<p>Loading...</p>';
+            labsContentDiv.style.display = 'block';
+            labsErrorDiv.style.display = 'none';
+    
+            if (!doctorId) {
+                labsContentDiv.style.display = 'none';
+                labsErrorDiv.textContent = 'Please enter a Doctor ID.';
+                labsErrorDiv.style.display = 'block';
+                return;
+            }
+    
+            try {
+                const apiUrl = `http://localhost:3000/api/hospitals/doctor/${doctorId}/labs`; // Adjust the endpoint
+                const response = await fetch(apiUrl);
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+                console.log("API Response:", data);
+    
+                if (data && data.length > 0) {
+    
+                   let labsToDisplay;
+    
+                      if (Array.isArray(data[0])) {
+                            // It's an array of arrays, extract the inner array.
+                            labsToDisplay = data.flat();
+                       } else {
+                           labsToDisplay = data; // It's already a flat array of lab objects
+                       }
+    
+                    let tableHTML = '<table>';
+                    tableHTML += '<thead><tr><th>Lab ID</th><th>Lab Name</th><th>Lab Contact</th></tr></thead>';
+                    tableHTML += '<tbody>';
+    
+                    labsToDisplay.forEach(lab => {
+                      const labId = lab.lab_id || 'N/A';
+                      const labName = lab.labname || 'N/A';
+                      const labContact = lab.labcontact || 'N/A';
+    
+                      tableHTML += `<tr>
+                                        <td>${labId}</td>
+                                        <td>${labName}</td>
+                                        <td>${labContact}</td>
+                                    </tr>`;
+                    });
+    
+                    tableHTML += '</tbody></table>';
+                    labsContentDiv.innerHTML = tableHTML;
+                    labsContentDiv.style.display = 'block';
+                    labsErrorDiv.style.display = 'none';
+                } else {
+                    labsContentDiv.textContent = 'No labs found for this doctor.';
+                    labsContentDiv.style.display = 'block';
+                    labsErrorDiv.style.display = 'none';
+                }
+    
+            } catch (error) {
+                console.error('Error fetching labs:', error);
+                labsContentDiv.style.display = 'none';
+                labsErrorDiv.textContent = `Error fetching data: ${error.message}`;
+                labsErrorDiv.style.display = 'block';
+            }
+        }
+    </script>
+
+    </div>
+  </main>
+  
+  <!-- Patient Details Modal -->
+  <div id="patientModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalPatientName">Patient Details</h2>
+        <span class="close" onclick="closePatientModal()">&times;</span>
+      </div>
+      <div id="modalContent">
+        <!-- Patient details will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <button class="secondary" onclick="closePatientModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-text">© 2025 MediCare Health Services. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    // Page Navigation
+    document.querySelectorAll('.page-tab').forEach(tab => {
+      tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetPage = this.getAttribute('data-page');
+        
+        // Reset all tabs and pages
+        document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+        
+        // Activate selected tab and page
+        this.classList.add('active');
+        document.getElementById(targetPage).classList.add('active');
+        
+        // // Load data if needed
+        // if (targetPage === 'all-patients') {
+        //   loadAllPatients();
+        // } else if (targetPage === 'mri-patients') {
+        //   loadMRIPatients();
+        // }
+      });
+    });
+    function showNewAppointmentModal() {
+      const modal = document.getElementById('newAppointmentModal');
+      const patientIdInput = document.getElementById('patientIdInput');
+      const newAppointmentPatientId = document.getElementById('newAppointmentPatientId');
+
+      // Pre-fill patient ID if available
+      if (patientIdInput.value) {
+        newAppointmentPatientId.value = patientIdInput.value;
+      }
+
+      // Set min date to today
+      const today = new Date();
+      const formattedDate = today.toISOString().slice(0, 16);
+      document.getElementById('newAppointmentDate').min = formattedDate;
+
+      modal.style.display = 'flex';
+    }
+    // Close new appointment modal
+    function closeModal() {
+      document.getElementById('newAppointmentModal').style.display = 'none';
+      document.getElementById('newAppointmentForm').reset();
+    }
+
+    // Show edit appointment modal
+    function showEditModal(appointmentId) {
+      const appointment = allAppointments.find(a => a.appointment_id == appointmentId);
+      if (!appointment) return;
+
+      document.getElementById('editAppointmentId').value = appointmentId;
+      
+      // Format date for datetime-local input
+      const date = new Date(appointment.date_of_appointment);
+      const formattedDate = date.toISOString().slice(0, 16);
+      document.getElementById('editAppointmentDate').value = formattedDate;
+      document.getElementById('editAppointmentStatus').value = appointment.status.toLowerCase();
+
+      document.getElementById('editAppointmentModal').style.display = 'flex';
+    }
+
+    // Close edit appointment modal
+    function closeEditModal() {
+      document.getElementById('editAppointmentModal').style.display = 'none';
+      document.getElementById('editAppointmentForm').reset();
+    }
+
+    // Tab Switching
+    function switchTab(tabId, tabElement) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected tab
+      document.getElementById(tabId).classList.add('active');
+      tabElement.classList.add('active');
+    }
+    
+    // Load All Patients
+    async function loadAllPatients() {
+      try {
+        const response = await fetch(`${API_URL}/patients`);
+        if (!response.ok) {
+          throw new Error('Failed to load patients');
+        }
+        
+        const patients = await response.json();
+        const patientsListElement = document.getElementById('patientsList');
+        
+        if (patients.length === 0) {
+          patientsListElement.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">📝</div>
+              <p>No patients found.</p>
+            </div>
+          `;
+          return;
+        }
+        
+        let html = '';
+        patients.forEach(patient => {
+          html += `
+            <div class="patient-card" onclick="openPatientModal(${patient.patient_id})">
+              <div class="patient-name">${patient.name}</div>
+              <div class="patient-id">ID: ${patient.patient_id}</div>
+              <div class="patient-info">
+                <span class="patient-info-icon">📧</span> ${patient.email || 'No email'}
+              </div>
+              <div class="patient-info">
+                <span class="patient-info-icon">📱</span> ${patient.phone || 'No phone'}
+              </div>
+            </div>
+          `;
+        });
+        
+        patientsListElement.innerHTML = html;
+      } catch (error) {
+        console.error('Error loading patients:', error);
+        document.getElementById('patientsList').innerHTML = `
+          <div class="error">
+            Failed to load patients. Please try again later.
+          </div>
+        `;
+      }
+    }
+    
+
+    </script>
+</body>
+</html>
