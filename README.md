@@ -79,9 +79,9 @@ HEALTHCARE-DBMS/
 
 ### 🤝 Contributors
 
-* Anveshan Khanna (2023116)
-* Dhruv Aggarwal (Me)
-* Pranav Prakash Kadam (2023382)
+- [Anveshan Khanna (2023116)](https://github.com/AnveshanK)
+- [Dhruv Aggarwal (Me)](https://github.com/dhruvaggarwal9)
+- [Pranav Prakash Kadam (2023382)](https://github.com/pranavkadam27)
 - [Ramneek Uttam (2023425)](https://www.github.com/ramneekuttam)
 
 ---
