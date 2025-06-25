@@ -82,7 +82,7 @@ HEALTHCARE-DBMS/
 * Anveshan Khanna (2023116)
 * Dhruv Aggarwal (Me)
 * Pranav Prakash Kadam (2023382)
-* Ramneek Uttam (2023425)
+- [Ramneek Uttam (2023425)](https://www.github.com/ramneekuttam)
 
 ---
 
