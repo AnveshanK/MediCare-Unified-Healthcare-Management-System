@@ -80,7 +80,7 @@ HEALTHCARE-DBMS/
 ### 🤝 Contributors
 
 - [Anveshan Khanna (2023116)](https://github.com/AnveshanK)
-- [Dhruv Aggarwal (Me)](https://github.com/dhruvaggarwal9)
+- [Dhruv Aggarwal (2023197)](https://github.com/dhruvaggarwal9)
 - [Pranav Prakash Kadam (2023382)](https://github.com/pranavkadam27)
 - [Ramneek Uttam (2023425)](https://www.github.com/ramneekuttam)
 
